@@ -27,7 +27,7 @@ saving=1;
 plotting=0;
 
 path='E'; % the HDD file with the patient data. Needed for loading ECG
-% savefolderECG=([path ':\InnerSence\processed data\ECG\']);
+savefolderECG=([path ':\InnerSence\processed data\ECG\']);
 savefolderECG=('C:\Users\310122653\Documents\PhD\Article_2_(EHV)\Processed Data\ECG\');
 win=30;
 
@@ -63,6 +63,7 @@ win=30;
    
    [FS,consence_ECG,consence_ECG_30s]=Combine_ECG_and_annotations(ECG_raw,Neonate,sheet,lead,FS, saving, savefolderECG); % +quiet alertness, active alertness, reliability, transition, position
                                                                                                                             % consence_ECG is all ECG samples joint with annotations
+                            load(['C:\Users\310122653\Documents\PhD\Article_2_(EHV)\Raw_Data\Data files\All files\index of feeding moments\Baby' num2str(Neonate) '\indexFood'])
                                                                                                       % consence_ECG_30s is all ECG samples joint with annotations separated into 30s cells
     disp('ECG and annotations combined')
 %%%%%%%%%%%%% Calculate RR peaks

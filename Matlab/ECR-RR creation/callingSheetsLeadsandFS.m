@@ -5,7 +5,7 @@
 
 function [sheet,lead,FS]=callingSheetsLeadsandFS(Neonate)
 
-if     Neonate == 3
+         if     Neonate == 3
                  sheet=2; % annotation sheet
                  lead=17; %13 or 17 %ECG lead can be 12-18
          elseif Neonate == 4
