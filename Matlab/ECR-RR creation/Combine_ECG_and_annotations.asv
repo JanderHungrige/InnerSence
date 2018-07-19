@@ -1,4 +1,4 @@
-function [FS,consence_ECG,consence_ECG_30s]=Combine_ECG_and_annotations(ECG_nocare,Neonate,sheet,lead,FS, saving,savefolder)
+function Combine_ECG_and_annotations(ECG_nocare,Neonate,sheet,lead,FS, saving,savefolderECG,savefolderA)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % This file loads the annotation
@@ -59,90 +59,91 @@ ECGwAnnotations(2,:)=ECG_nocare;                         %copy ECG without care 
     for j=1:longAnnot(1,1)
 %%%%% Annotations of Renee Otte     
             if aRO(j,5) == 999
-                ECGwAnnotations(3,i:i+faktor)=1; %QS
-            end
-            if aRO(j,6) == 999
-                ECGwAnnotations(6,i:i+faktor)=1; %AS
-            end
-            if aRO(j,7) == 999
-                ECGwAnnotations(9,i:i+faktor)=1; %quite alertness
-            end
-            if aRO(j,8) == 999
-                ECGwAnnotations(12,i:i+faktor)=1; %active alertness
-            end
-            if aRO(j,12) == 999
-                ECGwAnnotations(15,i:i+faktor)=1; %not reliable..use as IS?
+                ECGwAnnotations(3,i:i+faktor)=2; %QS
+        
+            elseif aRO(j,6) == 999
+                ECGwAnnotations(3,i:i+faktor)=1; %AS
+            
+            elseif aRO(j,7) == 999
+                ECGwAnnotations(3,i:i+faktor)=3; %quite alertness
+            
+            elseif aRO(j,8) == 999
+                ECGwAnnotations(3,i:i+faktor)=3; %active alertness
             end
             if aRO(j,11)~=998
-                ECGwAnnotations(18,i:i+faktor)=1; %transition 
+                ECGwAnnotations(3,i:i+faktor)=6; %transition 
             end
-            if aRO(j,14)~=998
-                ECGwAnnotations(21,i:i+faktor)=1; %position 
-            end     
+   
             if aRO(j,10)~=998
-                ECGwAnnotations(24,i:i+faktor)=1; %Unable to score
+                ECGwAnnotations(3,i:i+faktor)=0; %Unable to score
             end   
             if aRO(j,13)==2
-                ECGwAnnotations(27,i:i+faktor)=1; %Out of Bed
-            end             
+                ECGwAnnotations(3,i:i+faktor)=0; %Out of Bed
+            end     
+            if aRO(j,12) == 999
+                ECGwAnnotations(6,i:i+faktor)=1; %not reliable..use as IS?
+            end  
+%             if aRO(j,14)~=998
+%                 ECGwAnnotations(3,i:i+faktor)=1; %position 
+%             end              
 %%%%% Annotations of JB                
+            if aJB(j,5) == 999
+                ECGwAnnotations(4,i:i+faktor)=2; %QS
+        
+            elseif aJB(j,6) == 999
+                ECGwAnnotations(4,i:i+faktor)=1; %AS
             
-             if aJB(j,5) == 999
-                ECGwAnnotations(4,i:i+faktor)=1; %QS
-            end
-            if aJB(j,6) == 999
-                ECGwAnnotations(7,i:i+faktor)=1; %AS
-            end
-            if aJB(j,7) == 999
-                ECGwAnnotations(10,i:i+faktor)=1; %quite alertness
-            end
-            if aJB(j,8) == 999
-                ECGwAnnotations(13,i:i+faktor)=1; %active alertness
-            end
-            if aJB(j,12) == 999
-                ECGwAnnotations(16,i:i+faktor)=1; %not reliable..use as IS?
+            elseif aJB(j,7) == 999
+                ECGwAnnotations(4,i:i+faktor)=3; %quite alertness
+            
+            elseif aJB(j,8) == 999
+                ECGwAnnotations(4,i:i+faktor)=3; %active alertness
             end
             if aJB(j,11)~=998
-                ECGwAnnotations(19,i:i+faktor)=1; %transition
+                ECGwAnnotations(4,i:i+faktor)=6; %transition 
             end
-            if aJB(j,14)~=998
-                ECGwAnnotations(22,i:i+faktor)=1; %position 
-            end   
+   
             if aJB(j,10)~=998
-                ECGwAnnotations(25,i:i+faktor)=1; %Unable to score
-            end 
+                ECGwAnnotations(4,i:i+faktor)=0; %Unable to score
+            end   
             if aJB(j,13)==2
-                ECGwAnnotations(28,i:i+faktor)=1; %Out of Bed
-            end             
+                ECGwAnnotations(4,i:i+faktor)=0; %Out of Bed
+            end     
+            if aJB(j,12) == 999
+                ECGwAnnotations(7,i:i+faktor)=1; %not reliable..use as IS?
+            end  
+%             if aJB(j,14)~=998
+%                 ECGwAnnotations(3,i:i+faktor)=1; %position 
+%             end     
 %%%%% Annotations of Nadice B
-             if aNB(j,5) == 999
-                ECGwAnnotations(5,i:i+faktor)=1; %QS
-            end
-            if aNB(j,6) == 999
-                ECGwAnnotations(8,i:i+faktor)=1; %AS
-            end
-            if aNB(j,7) == 999
-                ECGwAnnotations(11,i:i+faktor)=1; %quite alertness
-            end
-            if aNB(j,8) == 999
-                ECGwAnnotations(14,i:i+faktor)=1; %active alertness
-            end
-            if aNB(j,12) == 999
-                ECGwAnnotations(17,i:i+faktor)=1; %not reliable..use as IS?
+            if aNB(j,5) == 999
+                ECGwAnnotations(5,i:i+faktor)=2; %QS
+        
+            elseif aNB(j,6) == 999
+                ECGwAnnotations(5,i:i+faktor)=1; %AS
+            
+            elseif aNB(j,7) == 999
+                ECGwAnnotations(5,i:i+faktor)=3; %quite alertness
+            
+            elseif aNB(j,8) == 999
+                ECGwAnnotations(5,i:i+faktor)=3; %active alertness
             end
             if aNB(j,11)~=998
-                ECGwAnnotations(20,i:i+faktor)=1; %transition 
+                ECGwAnnotations(5,i:i+faktor)=6; %transition 
             end
-            if aNB(j,14)~=998
-                ECGwAnnotations(23,i:i+faktor)=1; %position 
-            end 
+   
             if aNB(j,10)~=998
-                ECGwAnnotations(26,i:i+faktor)=1; %Unable to score
-            end 
+                ECGwAnnotations(5,i:i+faktor)=0; %Unable to score
+            end   
             if aNB(j,13)==2
-                ECGwAnnotations(29,i:i+faktor)=1; %Out of Bed
-            end             
-              
+                ECGwAnnotations(5,i:i+faktor)=0; %Out of Bed
+            end     
+            if aNB(j,12) == 999
+                ECGwAnnotations(8,i:i+faktor)=1; %not reliable..use as IS?
+            end  
+%             if aNB(j,14)~=998
+%                 ECGwAnnotations(3,i:i+faktor)=1; %position 
+%             end
         i=i+faktor;
     end 
     j=1; i=1; k=1;
@@ -156,44 +157,54 @@ ECGwAnnotations(2,:)=ECG_nocare;                         %copy ECG without care 
     
     consence_ECG(1,:)=ECGwAnnotations(1,:);        %time                     
     consence_ECG(2,:)=ECGwAnnotations(2,:);        %ECG
-            
-    %%Creating one file with ECG of agreed annotations
-        
-%     Pos=nansum(ECGwAnnotations([6 7 8],:))>=2;    consence_ECG(3,Pos)=1;%AS
-%     Pos=nansum(ECGwAnnotations([3 4 5],:))>=2;    consence_ECG(4,Pos)=1;%QS
-%     Pos=nansum(ECGwAnnotations([9 10 11],:))>=2;  consence_ECG(5,Pos)=1;%quit alertness
-%     Pos=nansum(ECGwAnnotations([12 13 14],:))>=2; consence_ECG(6,Pos)=1;%Active alertness
-%     Pos=nansum(ECGwAnnotations([15 16 17],:))>=2; consence_ECG(7,Pos)=1;%Not reliable
-%     Pos=nansum(ECGwAnnotations([18 19 20],:))>=2; consence_ECG(8,Pos)=1;%transition
-%     Pos=nansum(ECGwAnnotations([21 22 23],:))>=2; consence_ECG(9,Pos)=1;%position
-%     Pos=nansum(ECGwAnnotations([24 25 26],:))>=2; consence_ECG(10,Pos)=1;%Unable to score
-% 
-    Pos=nansum(ECGwAnnotations([6 7 8],:))>=2;    consence_ECG(3,Pos)=1;%AS
-    Pos=nansum(ECGwAnnotations([3 4 5],:))>=2;    consence_ECG(3,Pos)=2;%QS
-    Pos=nansum(ECGwAnnotations([9 10 11],:))>=2;  consence_ECG(3,Pos)=3;%quit alertness
-    Pos=nansum(ECGwAnnotations([12 13 14],:))>=2; consence_ECG(3,Pos)=3;%Active alertness
-    Pos=nansum(ECGwAnnotations([18 19 20],:))>=2; consence_ECG(3,Pos)=6;%transition
-    Pos=nansum(ECGwAnnotations([24 25 26],:))>=2; consence_ECG(3,Pos)=0;%Unable to score        
-    Pos=nansum(ECGwAnnotations([15 16 17],:))>=2; consence_ECG(4,Pos)=1;%Not reliable
-                                                  consence_ECG(3,indexFood)=4;%Care Taking
-    Pos=nansum(ECGwAnnotations([27 28 29],:))>=2; consence_ECG(3,Pos)=0;%Out of Bed 
     
-    consence_ECG(3,:)
+    [Val,AMount,~]=mode(ECGwAnnotations([3 4 5],:));
     
-    for j=1:faktor:faktor*longAnnot(1,1)-faktor % for length of the annotation minus one window with steps of window
+    Pos=AMount==3; consence_ECG(3,Pos)=Val(Pos); % where all agree
+    Pos=AMount==2; consence_ECG(3,Pos)=Val(Pos); % where two agree get most common value(mode) 
+    Pos=AMount==1; consence_ECG(3,Pos)=ECGwAnnotations(3,Pos);% where non agree use Renees Annottations
+    if sum(isnan(consence_ECG(3,:)))>0;  consence_ECG(3,Pos)=ECGwAnnotations(5,Pos);  end  % if still nans exist that measn Renee did not fully annotate, then rather choose nadice 
+    consence_ECG(3,indexFood)=4;%Care Taking overwrites any 0 ; Taken from Toine
 
-        consence_ECG_30s{i}=consence_ECG(:,j:j+faktor);
+%  
+%     Pos=nansum(ECGwAnnotations([6 7 8],:))>=2;    consence_ECG(3,Pos)=1;%AS
+%     Pos=nansum(ECGwAnnotations([3 4 5],:))>=2;    consence_ECG(3,Pos)=2;%QS
+%     Pos=nansum(ECGwAnnotations([9 10 11],:))>=2;  consence_ECG(3,Pos)=3;%quit alertness
+%     Pos=nansum(ECGwAnnotations([12 13 14],:))>=2; consence_ECG(3,Pos)=3;%Active alertness
+%     Pos=nansum(ECGwAnnotations([18 19 20],:))>=2; consence_ECG(3,Pos)=6;%transition
+%     Pos=nansum(ECGwAnnotations([24 25 26],:))>=2; consence_ECG(3,Pos)=0;%Unable to score        
+%     Pos=nansum(ECGwAnnotations([15 16 17],:))>=2; consence_ECG(4,Pos)=1;%Not reliable
+%                                                   consence_ECG(3,indexFood)=4;%Care Taking
+%     Pos=nansum(ECGwAnnotations([27 28 29],:))>=2; consence_ECG(3,Pos)=0;%Out of Bed 
+%     
+%   
+
+%make 30s cells
+    for j=1:faktor:floor(length(consence_ECG)/faktor)*faktor % for the length of ECG as long as it can be separated into 30s
+        ECG_30s{i}=consence_ECG([1,2],[j:j+faktor]);      
+        Annotations_30s{i}=mode(consence_ECG([3],[j:j+faktor]));
         i=i+1;
-        
+        if floor(length(consence_ECG)/faktor)*faktor < (length(consence_ECG)/faktor)*faktor
+            ECG_30s{i}=consence_ECG([1,2],[j:j+faktor]);      
+            Annotations_30s{i}=mode(consence_ECG([3],[j:j+faktor]));
     end
-        
+    i=1;
+% plain data in array form
+    ECG=consence_ECG([1,2],:);      
+    Annotations=consence_ECG(3,:);
+    
     if saving
-       if exist('consence_ECG','var') 
-           save([savefolder 'consence_ECG_' num2str(Neonate) '.mat'],'consence_ECG')  ; 
+%        if exist('ECG_30s','var') 
+%            save([savefolderECG 'ECG_' num2str(Neonate) '_win_30.mat'],'ECG_30s')  ; 
+%        end
+%        if exist('Annotations_30s','var') 
+%            save([savefolderA 'Annotations_' num2str(Neonate) '_win_30.mat'],'Annotations_30s')  ; 
+%        end    
+       if exist('ECG','var') 
+           save([savefolderECG 'ECG_' num2str(Neonate) '.mat'],'ECG')  ; 
        end
-       if exist('consence_ECG_30s','var') 
-           save([savefolder 'consence_ECG_' num2str(Neonate) '_win_30.mat'],'consence_ECG_30s')  ; 
-       end       
-       
+       if exist('Annotations','var') 
+           save([savefolderA 'Annotations_' num2str(Neonate) '.mat'],'Annotations')  ; 
+       end              
     end
 end

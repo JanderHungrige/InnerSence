@@ -1,24 +1,28 @@
-function SDNN(RR,Neonate,saving,savefolder,win,Session,S) 
+function SDDec(RR,Neonate,saving,savefolder,win,Session,S) 
 %Input
 % RR: 5min RR distance data
 % Neonate: Which patient
 % saving: If saving is whished
 % savefolder: Where to save
-% win: Duration of the HRV window. Comon is 5min/300s
+% win: Duration of the HRV window. Common is 5min/300s
 
 for i=1:length(RR)
-     SDNN{1,i}=nanstd(RR{i,1});
+    if all(isnan(RR{i,1}))
+        SDDEC{i,1}=nan;
+        continue
+    end    
+    [~, columns]=find(RR{i,1}>nanmean(RR{i,1}));
+    SDDEC{1,i}=nanstd(RR{i,1}(1,columns));
 end
-
-
+    
 %%%%%%%%%%%%replace [] with nan
-ix=cellfun(@isempty,SDNN);
-SDNN(ix)={nan};  
+ix=cellfun(@isempty,SDDEC);
+SDDEC(ix)={0};  
 
             
 %%%%%%%%%%%% SAVING            
 if saving                     %saving R peaks positions in mat file                 
-    Saving(SDNN,savefolder,Neonate,win,Session,S) 
+    Saving(SDDEC,savefolder,Neonate,win,Session,S) 
 end% end if saving 
 
     

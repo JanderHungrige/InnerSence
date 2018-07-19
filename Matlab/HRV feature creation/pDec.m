@@ -1,4 +1,4 @@
-function SDNN(RR,Neonate,saving,savefolder,win,Session,S) 
+function pDec(RR,Neonate,saving,savefolder,win,Session,S) 
 %Input
 % RR: 5min RR distance data
 % Neonate: Which patient
@@ -7,18 +7,22 @@ function SDNN(RR,Neonate,saving,savefolder,win,Session,S)
 % win: Duration of the HRV window. Comon is 5min/300s
 
 for i=1:length(RR)
-     SDNN{1,i}=nanstd(RR{i,1});
+    if all(isnan(RR{i,1}))
+        pDEC{i,1}=nan;
+        continue
+    end
+    pDEC{1,i}=sum(RR{i,1}>nanmean(RR{i,1}))/numel(RR{i,1})*100;
 end
-
+    
 
 %%%%%%%%%%%%replace [] with nan
-ix=cellfun(@isempty,SDNN);
-SDNN(ix)={nan};  
+ix=cellfun(@isempty,pDEC);
+pDEC(ix)={0};  
 
             
 %%%%%%%%%%%% SAVING            
 if saving                     %saving R peaks positions in mat file                 
-    Saving(SDNN,savefolder,Neonate,win,Session,S) 
+    Saving(pDEC,savefolder,Neonate,win,Session,S) 
 end% end if saving 
 
     
