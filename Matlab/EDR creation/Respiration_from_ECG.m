@@ -1,4 +1,4 @@
-function [EDR]=Respiration_from_ECG(ECG,ecg_r_peak_idx,bbi_ecg,FS)
+function [EDR, t_EDR]=Respiration_from_ECG(ECG,ecg_r_peak_idx,bbi_ecg,FS)
 %----------------------------------------------------------------------
 % ECG Derived Respiration (EDR)
 % the resiration can be determined in seveeral ways:
@@ -32,10 +32,16 @@ addpath('C:\Users\310122653\Documents\GitHub\InnerSence\Matlab\R peak detection\
 % [ecg_r_peak_idx, ecg_s_peak_idx, ~, ~, ~, bbi_ecg, ~] = ecg_find_rpeaks(t_ecg, ECG, FS, hr_max,ploting,saving);
 
 %% ******* 1# EDR from R peak amplitude not detrended ************
-
+if isrow(ECG)
+    ECG=ECG';
+end
 for i=1:length(ECG)
-    t_ecg=linspace(0,ceil(length(ECG{i})/FS), length(ECG{i}))'; % timeline in seconds with 500 Hz FS        
-    ECGmat=cell2mat(ECG{i});
+    t_ecg=linspace(0,ceil(length(ECG{i})/FS), length(ECG{i}))'; % timeline in seconds with 500 Hz FS   
+    if iscell(ECG{i})
+        ECGmat=cell2mat(ECG{i});
+    else
+        ECGmat=ECG{i};
+    end
     EDR_rpeak=ECGmat(ecg_r_peak_idx{i});                                                               % Respiration derived from ECG
     %-------------------- Now if we use the total data, we can interpolate to have synched data of EDR and ECG, Here we use now 30s epochs of ECG. Therfore, we do not need to interpolate
     EDR_FS=length(ecg_r_peak_idx{i})/(length(ECGmat)/FS);                                              % determine sampfle frequency for EDR signal to interpolate to Respiration signal (e.g.: bpm=120 -> sf=2Hz)
@@ -60,7 +66,9 @@ Rs = 30;                                            % Stopband Ripple (dB)
 [b,a] = cheby2(n, Rs, Ws);                          % Transfer Function Coefficients
 [sos,g] = tf2sos(b,a);                              % Second-Order-Section For Stability
 %_________________________________________________________
-EDR_passband = filtfilt(sos,g,ECG); %remove baseline wander with zero phase filter
+EDR_passband{i}=filtfilt(sos,g,EDR_same_length_as_ECG{i});
+
+
 
 %% *********************
 %******* Decide which variable to get out *******

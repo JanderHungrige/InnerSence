@@ -27,6 +27,14 @@ S=1;
 
 onlyAnnotations=0;
 
+
+Pat_weight=[1845,2265,1740,1235,1700,1665,1460,1615];
+Pat_GA=[31*7+5,33*7+6,28*7+6,30*7+1,32*7+6,30 ,25*7+4,29*7+6]; %pat 9 does not have any
+Pat_CA=[33*7+6,34*7+6,34*7+6,31*7+2,33*7+5,37+4,31*7+5,32*7];
+Pat_GACA=Pat_CA-Pat_GA; % difference between the birth and recording of data
+NICU_info=[1, 2, 1, 1, 2, 1, 1, 1];% NICU=1, NMCU=2
+C02=[]; %1=CPAP, 2=lowflow 3=no
+
 Matlabbase='C:\Users\310122653\Documents\GitHub\InnerSence\Matlab\';
 cd(Matlabbase)
 addpath(Matlabbase)
@@ -74,10 +82,6 @@ elseif  strcmp(RRMethod,'M')
     savefolderHRVnonlin= ([ savefolder 'HRV_features\nonlinear_M\']);        
 end
 
-Pat_weight=[1845,2265,1740,1235,1700,1665,1460,1615];
-Pat_GA=[31*7+5,33*7+6,28*7+6,30*7+1,32*7+6,30 ,25*7+4,29*7+6]; %pat 9 does not have any
-Pat_CA=[33*7+6,34*7+6,34*7+6,31*7+2,33*7+5,37+4,31*7+5,32*7];
-Pat_GACA=Pat_CA-Pat_GA; % difference between the birth and recording of data
 
  for I=1:length(pat)
     disp('***************************************')
@@ -186,6 +190,8 @@ Pat_GACA=Pat_CA-Pat_GA; % difference between the birth and recording of data
         
     %% ************ Creating spectrum for ECG-Signal **************         
        [powerspectrum,f]=Lomb_scargel_single(RR_300,RR_idx_300,t_300,Neonate,saving,savefolderHRVfreq,win) ;
+       [powerspectrumEDR,fEDR]=Lomb_scargel_single(EDR_300,RR_idx_300,t_300,Neonate,saving,savefolderHRVfreq,win) ;
+
         disp('* Periodogram calculated')
 
     %%  ************ AGE & Weight **************    
@@ -253,7 +259,8 @@ Pat_GACA=Pat_CA-Pat_GA; % difference between the birth and recording of data
 
         freqdomainHRV (powerspectrum,f,Neonate,win,saving,savefolderHRVfreq,Sessions(S,1).name,S)
            disp('- Frequency finished') 
-
+        freqdomainEDR (powerspectrum,f,Neonate,win,savefolderEDR,savefolderHRVfreq,S)
+           disp('- EDR requency finished')    
 
     %%%%%%% HRV Non linear
         disp('Nonlinear analysis start')
