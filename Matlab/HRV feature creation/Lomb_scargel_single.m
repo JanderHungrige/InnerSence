@@ -8,18 +8,22 @@
 % win=[60,120,180,240,300]; %window in seconds
 % overlap=[0.5,1];
 
-function [powerspectrum,f]=Lomb_scargel_single(RR,RR_idx,t,Neonate,saving,savefolder,win)  
-   all_idx=cell(1,length(RR));
-   timing=cell(1,length(RR));
+function [powerspectrumR,f]=Lomb_scargel_single(RR,RR_idx,t,Neonate,saving,savefolder,win)  
+if isrow(RR);  RR=RR'; end
+if isrow(RR_idx);  RR_idx=RR_idx'; end
+if isrow(t);  t=t'; end
+
+   all_idx=cell(length(RR),1);
+   timing=cell(length(RR),1);
  % creating time vector  
  for M=1:length(RR)
      if all(isnan(RR{M,1}))==1
-         powerspectrum{M,1}=nan;f{1,M}=nan;
+         powerspectrumR{M,1}=nan;f{1,M}=nan;
      elseif  nnz(~isnan(RR{M,1}))<2 %need more then 2 values otherthan nan (nnz=Number of nonzero matrix elements
-         powerspectrum{M,1}=nan;f{1,M}=nan;         
+         powerspectrumR{M,1}=nan;f{1,M}=nan;         
      else    
     %     RR{1,M}(any(isnan(RR{1,M})))=[]; %removing nans
-        timing{M,1}=t{1,M}(RR_idx{M,1},1); % get the timestamp from AS time vector at the Rpeaks in s
+        timing{M,1}=t{M,1}(RR_idx{M,1},1); % get the timestamp from AS time vector at the Rpeaks in s
 
         % removing outlier
         all_idx{M,1} = 1:length(RR{M,1});
@@ -28,9 +32,9 @@ function [powerspectrum,f]=Lomb_scargel_single(RR,RR_idx,t,Neonate,saving,savefo
         clearvars outlier_idx
 
         %lomb scargel
-        [powerspectrum{M,1},f{1,M}] = plomb(RR{M,1},timing{M,1});
+        [powerspectrumR{M,1},f{1,M}] = plomb(RR{M,1},timing{M,1});
         %convert to dB / frequency
-        pxxdB{M,1}=10*log10(powerspectrum{M,1});
+        pxxdB{M,1}=10*log10(powerspectrumR{M,1});
      end
 
  end
@@ -42,7 +46,7 @@ function [powerspectrum,f]=Lomb_scargel_single(RR,RR_idx,t,Neonate,saving,savefo
 
 %%%%%%%%%%%% SAVING            
 if saving                     %saving R peaks positions in mat file                 
-    Saving(powerspectrum,savefolder,Neonate,win) 
+    Saving(powerspectrumR,savefolder,Neonate,win) 
 end% end if saving 
 
 

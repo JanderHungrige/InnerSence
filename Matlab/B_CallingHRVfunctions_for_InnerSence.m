@@ -14,6 +14,9 @@ clc
 tic
 PatientID=[3,4,5,6,7,9,13,15]; % core. Show all patients in the folder
 pat=[3,4,5,6,7,9,13,15]; 
+% pat=3
+pat=[3,4,5,6,7,9,13,15]; 
+
 
 
 RRMethod='R'; %M or R to calculate the RR with Michiel or Ralphs algorythm
@@ -58,6 +61,8 @@ if strcmp(RRMethod,'R')
     if (exist([savefolder 'HRV_features\timedomain\']) )==0;  mkdir([savefolder 'HRV_features\timedomain\']);end
     if (exist([savefolder 'HRV_features\freqdomain\']) )==0;  mkdir([savefolder 'HRV_features\freqdomain\']);end
     if (exist([savefolder 'HRV_features\nonlinear\']) )==0;   mkdir([savefolder 'HRV_features\nonlinear\']);end
+    if (exist([savefolder 'HRV_features\weigthAge\']) )==0;   mkdir([savefolder 'HRV_features\weigthAge\']);end
+
 elseif  strcmp(RRMethod,'M')    
     if (exist([savefolder 'HRV_features\RR_M\']) )==0;  mkdir([savefolder 'HRV_features\RR_M\']);end
     if (exist([savefolder 'HRV_features\EDR_M\']) )==0;  mkdir([savefolder 'HRV_features\EDR_M\']);end    
@@ -72,7 +77,8 @@ if strcmp(RRMethod,'R')
     savefolderEDR= ([ savefolder 'HRV_features\EDR\']);    
     savefolderHRVtime= ([ savefolder 'HRV_features\timedomain\']);
     savefolderHRVfreq= ([ savefolder 'HRV_features\freqdomain\']);        
-    savefolderHRVnonlin= ([ savefolder 'HRV_features\nonlinear\']);                    
+    savefolderHRVnonlin= ([ savefolder 'HRV_features\nonlinear\']);  
+    savefolderHRVweightAge=([savefolder 'HRV_features\weigthAge\']);
 elseif  strcmp(RRMethod,'M')
     savefolderECG= ([ savefolder 'HRV_features\ECG_M\']);    
     savefolderRR= ([ savefolder 'HRV_features\RR_M\']);
@@ -92,8 +98,11 @@ end
   
 %% ************ Load data **************
     Loadsession=dir(loadfolder);Loadsession=Loadsession(3:end-1,:); %-1 as we created also a folder which is located at the end (win30)
-    if onlyAnnotations ~=1
-        load([loadfolder Loadsession(Neonate).name])
+    for J=1:length(Loadsession)
+        if strcmp(Loadsession(J).name ,['ECG_' num2str(Neonate) '.mat']) && onlyAnnotations ~=1
+            load([loadfolder Loadsession(J).name])
+            disp('Patient file found')
+        end
     end
   
 
@@ -195,17 +204,17 @@ end
         disp('* Periodogram calculated')
 
     %%  ************ AGE & Weight **************    
-    for k=1:length(RR)
+    for k=1:length(RR_30)
         Birthweight{k}=Pat_weight(I);
         GA{k}=Pat_GA(I); 
         CA{k}=Pat_CA(I);
         Age_diff{k}=Pat_GACA(I);
     end
     if saving
-        Saving(Birthweight,savefolderAGEWEight, Neonate, win)
-        Saving(GA,savefolderAGEWEight, Neonate, win)
-        Saving(CA,savefolderAGEWEight, Neonate, win)
-        Saving(Age_diff,savefolderAGEWEight, Neonate, win)        
+        Saving(Birthweight,savefolderHRVweightAge, Neonate, win)
+        Saving(GA,savefolderHRVweightAge, Neonate, win)
+        Saving(CA,savefolderHRVweightAge, Neonate, win)
+        Saving(Age_diff,savefolderHRVweightAge, Neonate, win)        
         disp('* Age and Weight saved')
     end  
 
@@ -219,8 +228,8 @@ end
             Resp_EDR(Resp_win_300,Resp_win_30,EDR_win_300,EDR_win_30,Neonate,saving,savefolderHRVtime,win,Sessions(S,1).name,S)    
              disp('- EDR finished')
           end
-
-    %%%%%%%% ECG TIME DOMAIN     
+% 
+%     %%%%%%%% ECG TIME DOMAIN     
         disp('ECG time domain analysis start') 
 
         Beats_per_Epoch(RR_300,Neonate,saving,savefolderHRVtime,win,Sessions(S,1).name,S)   % S for session number
@@ -234,8 +243,8 @@ end
         SDaLL(ECG_win_30,t_30,Neonate,saving,savefolderHRVtime,win,faktor,Sessions(S,1).name,S) %Standart derivation of 30s linelength meaned over 5min
              disp('- SDaLL finished') 
 
-
-%   %%%%%%%% HRV TIME DOMAIN
+% 
+% %   %%%%%%%% HRV TIME DOMAIN
         disp('HRV time domain analysis start')
 
         SDNN(RR_300,Neonate,saving,savefolderHRVtime,win,Sessions(S,1).name,S);
@@ -253,26 +262,28 @@ end
         SDDec(RR_300,Neonate,saving,savefolderHRVtime,win,Sessions(S,1).name,S);
            disp('- SDDec finished')
  
-          
-%   %%%%%%% HRV Frequency domain
+%           
+% %   %%%%%%% HRV Frequency domain
         disp('Frequency time domain start')
 
         freqdomainHRV (powerspectrum,f,Neonate,win,saving,savefolderHRVfreq,Sessions(S,1).name,S)
            disp('- Frequency finished') 
-        freqdomainEDR (powerspectrum,f,Neonate,win,savefolderEDR,savefolderHRVfreq,S)
+        freqdomainEDR (powerspectrumEDR,fEDR,Neonate,win,saving,savefolder,S)
            disp('- EDR requency finished')    
-
-    %%%%%%% HRV Non linear
+% 
+%     %%%%%%% HRV Non linear
         disp('Nonlinear analysis start')
 
         SampEn_QSE_SEAUC(RR_300,Neonate,saving,savefolderHRVnonlin,win,faktor,Sessions(S,1).name,S ) %
-            disp('- SampEn QSE SEAUCfinished')
+            disp('- SampEn QSE SEAUC finished')
         LempelZivECG(ECG_win_300,Neonate,saving,savefolderHRVnonlin,win,Sessions(S,1).name,S)  
           disp('- LepelZiv ECG finished')         
         LempelZivRR(RR_300,Neonate,saving,savefolderHRVnonlin,win,Sessions(S,1).name,S);
           disp('- LepelZiv HRV finished')   
-        LempelZivEDR(EDR_300,Neonate,saving,savefolderHRVnonlin,win,Sessions(S,1).name,S);
-          disp('- LepelZiv HRV finished')  
+%         LempelZivEDR(EDR_300,Neonate,saving,savefolderHRVnonlin,win,Sessions(S,1).name,S);
+%           disp('- LepelZivR HRV finished') 
+%         SampEn_QSE_SEAUC_EDR(EDR_300,Neonate,saving,savefolder,win,Sessions(S,1).name,S);
+%             disp('- SampEn QSE SEAUC finished R')
 
         clearvars ECG_win_300 ECG_win_30 t_ECG_300 t_ECG_30 RR_idx_300 RR_300 RR_idx_30 RR_30 powerspectrum f
         

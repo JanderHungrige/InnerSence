@@ -46,8 +46,10 @@ for i=1:length(ECG)
     %-------------------- Now if we use the total data, we can interpolate to have synched data of EDR and ECG, Here we use now 30s epochs of ECG. Therfore, we do not need to interpolate
     EDR_FS=length(ecg_r_peak_idx{i})/(length(ECGmat)/FS);                                              % determine sampfle frequency for EDR signal to interpolate to Respiration signal (e.g.: bpm=120 -> sf=2Hz)
     t_edr=linspace(0,floor(length(ecg_r_peak_idx{i})/EDR_FS), length(ecg_r_peak_idx{i}))';             % Timeline in seconds with around 2 Hz fs    
-    EDR_same_length_as_ECG{i}=interp1(t_edr,EDR_rpeak,t_ecg,'pchip'); 
+    EDR_same_length_as_ECG{i}=interp1(t_edr,EDR_rpeak,t_ecg,'pchip');
+    EDR_no_interp{i}=EDR_rpeak;
 end
+
 
 %% ******* 2# EDR from HRV signal *******
 
@@ -72,7 +74,7 @@ EDR_passband{i}=filtfilt(sos,g,EDR_same_length_as_ECG{i});
 
 %% *********************
 %******* Decide which variable to get out *******
-EDR=EDR_same_length_as_ECG;
+EDR=EDR_no_interp;
 for i=1:length(EDR)
     EDR{i}=EDR{i}-nanmean(EDR{i}); %center around zero. Remove offset.
 end
