@@ -15,7 +15,8 @@ tic
 PatientID=[3,4,5,6,7,9,13,15]; % core. Show all patients in the folder
 pat=[3,4,5,6,7,9,13,15]; 
 % pat=3
-pat=[15]; 
+pat=[3,4,5,6,7,9,13,15]; 
+
 
 
 RRMethod='R'; %M or R to calculate the RR with Michiel or Ralphs algorythm
@@ -37,21 +38,27 @@ Pat_GACA=Pat_CA-Pat_GA; % difference between the birth and recording of data
 NICU_info=[1, 2, 1, 1, 2, 1, 1, 1];% NICU=1, NMCU=2
 C02=[]; %1=CPAP, 2=lowflow 3=no
 
-Matlabbase='C:\Users\310122653\Documents\GitHub\InnerSence\Matlab\';
+if strcmp(user,c3po)
+    basepath='C:\Users\C3PO';
+elseif strcmp(user,Philips)
+    basepath='C:\Users\310122653';
+end
+
+Matlabbase=[basepath '\Documents\GitHub\InnerSence\Matlab'];
 cd(Matlabbase)
 addpath(Matlabbase)
-addpath('C:\Users\310122653\Documents\GitHub\InnerSence\Matlab\EDR creation')
-addpath('C:\Users\310122653\Documents\GitHub\InnerSence\Matlab\R peak detection')
-addpath('C:\Users\310122653\Documents\GitHub\InnerSence\Matlab\ECG feature creation')
-addpath('C:\Users\310122653\Documents\GitHub\InnerSence\Matlab\HRV feature creation')
-addpath('C:\Users\310122653\Documents\GitHub\InnerSence\Matlab\ECR-RR creation')
+addpath([basepath '\Documents\GitHub\InnerSence\Matlab\EDR creation')
+addpath([basepath 'C:\Users\C3PO\Documents\GitHub\InnerSence\Matlab\R peak detection')
+addpath([basepath 'C:\Users\C3PO\Documents\GitHub\InnerSence\Matlab\ECG feature creation')
+addpath([basepath 'C:\Users\C3PO\Documents\GitHub\InnerSence\Matlab\HRV feature creation')
+addpath([basepath 'C:\Users\C3PO\Documents\GitHub\InnerSence\Matlab\ECR-RR creation')
 
-path='C'; % partition with the patient data. Needed for loading ECG
-loadfolder=('C:\Users\310122653\Documents\PhD\Article_2_(EHV)\Processed Data\ECG\');
-loadfolderA=('C:\Users\310122653\Documents\PhD\Article_2_(EHV)\Processed Data\Annotations\');
+path='C:\'; % partition with the patient data. Needed for loading ECG
+loadfolder=([basepath 'C:\Users\C3PO\Documents\PhD\Article_2_(EHV)\Processed Data\ECG\');
+loadfolderA=([basepath 'C:\Users\310122653\Documents\PhD\Article_2_(EHV)\Processed Data\Annotations\');
 
 
-savefolder= ([path ':\Users\310122653\Documents\PhD\Article_2_(EHV)\Processed data\']);
+savefolder= ([basepath '\Documents\PhD\Article_2_(EHV)\Processed data\']);
 SavefolderAnnotations=([ savefolder 'Annotations\']);
 
 if strcmp(RRMethod,'R')
@@ -97,11 +104,11 @@ end
   
 %% ************ Load data **************
     Loadsession=dir(loadfolder);Loadsession=Loadsession(3:end-1,:); %-1 as we created also a folder which is located at the end (win30)
-    for J=1:length(pat)
-        if strcmp(Loadsession(J).name ,['ECG_' num2str(Neonate) '.mat'])
-            
-    if onlyAnnotations ~=1
-        load([loadfolder Loadsession(Neonate).name])
+    for J=1:length(Loadsession)
+        if strcmp(Loadsession(J).name ,['ECG_' num2str(Neonate) '.mat']) && onlyAnnotations ~=1
+            load([loadfolder Loadsession(J).name])
+            disp('Patient file found')
+        end
     end
   
 
