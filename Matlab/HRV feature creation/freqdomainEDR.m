@@ -81,6 +81,7 @@ for i=1:length(LFR)
 end
 if saving
     Saving(LFnormR,savefolder, Neonate, win,S)
+    disp(' -LFnormR calculated')
 end
         
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

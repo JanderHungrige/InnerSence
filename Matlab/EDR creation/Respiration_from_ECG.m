@@ -42,12 +42,18 @@ for i=1:length(ECG)
     else
         ECGmat=ECG{i};
     end
-    EDR_rpeak=ECGmat(ecg_r_peak_idx{i});                                                               % Respiration derived from ECG
-    %-------------------- Now if we use the total data, we can interpolate to have synched data of EDR and ECG, Here we use now 30s epochs of ECG. Therfore, we do not need to interpolate
-    EDR_FS=length(ecg_r_peak_idx{i})/(length(ECGmat)/FS);                                              % determine sampfle frequency for EDR signal to interpolate to Respiration signal (e.g.: bpm=120 -> sf=2Hz)
-    t_edr=linspace(0,floor(length(ecg_r_peak_idx{i})/EDR_FS), length(ecg_r_peak_idx{i}))';             % Timeline in seconds with around 2 Hz fs    
-    EDR_same_length_as_ECG{i}=interp1(t_edr,EDR_rpeak,t_ecg,'pchip');
-    EDR_no_interp{i}=EDR_rpeak;
+    if all(isnan(ecg_r_peak_idx{i}))
+        EDR_rpeak=NaN;
+        EDR_no_interp{i}=EDR_rpeak;
+        EDR_same_length_as_ECG{i}=EDR_rpeak;
+    else
+        EDR_rpeak=ECGmat(ecg_r_peak_idx{i});           
+        %-------------------- Now if we use the total data, we can interpolate to have synched data of EDR and ECG, Here we use now 30s epochs of ECG. Therfore, we do not need to interpolate
+%         EDR_FS=length(ecg_r_peak_idx{i})/(length(ECGmat)/FS);                                              % determine sampfle frequency for EDR signal to interpolate to Respiration signal (e.g.: bpm=120 -> sf=2Hz)
+%         t_edr=linspace(0,floor(length(ecg_r_peak_idx{i})/EDR_FS), length(ecg_r_peak_idx{i}))';             % Timeline in seconds with around 2 Hz fs    
+%         EDR_same_length_as_ECG{i}=interp1(t_edr,EDR_rpeak,t_ecg,'pchip');
+        EDR_no_interp{i}=EDR_rpeak;
+    end
 end
 
 
@@ -68,7 +74,7 @@ Rs = 30;                                            % Stopband Ripple (dB)
 [b,a] = cheby2(n, Rs, Ws);                          % Transfer Function Coefficients
 [sos,g] = tf2sos(b,a);                              % Second-Order-Section For Stability
 %_________________________________________________________
-EDR_passband{i}=filtfilt(sos,g,EDR_same_length_as_ECG{i});
+% EDR_passband{i}=filtfilt(sos,g,EDR_same_length_as_ECG{i});
 
 
 

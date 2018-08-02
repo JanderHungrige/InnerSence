@@ -15,9 +15,9 @@ tic
 PatientID=[3,4,5,6,7,9,13,15]; % core. Show all patients in the folder
 pat=[3,4,5,6,7,9,13,15]; 
 % pat=3
-pat=[3,4,5,6,7,9,13,15]; 
+pat=[6,7,9,13,15]; 
 
-user=c3po; % c3po Philips
+user='c3po'; % c3po Philips
 
 RRMethod='R'; %M or R to calculate the RR with Michiel or Ralphs algorythm
 saving=1;
@@ -38,9 +38,9 @@ Pat_GACA=Pat_CA-Pat_GA; % difference between the birth and recording of data
 NICU_info=[1, 2, 1, 1, 2, 1, 1, 1];% NICU=1, NMCU=2
 C02=[]; %1=CPAP, 2=lowflow 3=no
 
-if strcmp(user,c3po)
+if strcmp(user,'c3po')
     basepath='C:\Users\C3PO';
-elseif strcmp(user,Philips)
+elseif strcmp(user,'Philips')
     basepath='C:\Users\310122653';
 end
 
@@ -52,10 +52,12 @@ addpath([basepath '\Documents\GitHub\InnerSence\Matlab\R peak detection'])
 addpath([basepath '\Documents\GitHub\InnerSence\Matlab\ECG feature creation'])
 addpath([basepath '\Documents\GitHub\InnerSence\Matlab\HRV feature creation'])
 addpath([basepath '\Documents\GitHub\InnerSence\Matlab\ECR-RR creation'])
+addpath([basepath '\Documents\GitHub\InnerSence\Matlab\R peak detection\RAlps Rpeak detection'])
 
 path='C:\'; % partition with the patient data. Needed for loading ECG
 loadfolder=([basepath '\Documents\PhD\Article_2_(EHV)\Processed Data\ECG\']);
 loadfolderA=([basepath '\Documents\PhD\Article_2_(EHV)\Processed Data\Annotations\']);
+
 
 
 savefolder= ([basepath '\Documents\PhD\Article_2_(EHV)\Processed data\']);
@@ -192,7 +194,19 @@ end
            Saving(RR_300,savefolderRR, Neonate, win)           
            disp('* RR saved')
         end
-        
+% MAKENG THE INDEX CELL THE SAME LENGTH AS TEH ECG.THIS IS IMPORTANT FOR THE EDR        
+        if length(RR_idx_30)<length(RR_30)
+            while length(RR_idx_30)<length(RR_30)
+                RR_idx_30{end+1}=NaN;
+            end
+        end
+            
+        if length(RR_idx_300)<length(RR_300)
+            while length(RR_idx_300)<length(RR_300)
+                RR_idx_300{end+1}=NaN;
+            end
+        end
+                    
         %% ************ Creating EDR signal from 30s epoch ECG **************
         [EDR_30] =Respiration_from_ECG(ECG_win_30,RR_idx_30,RR_30,500);        
         [EDR_300]=Respiration_from_ECG(ECG_win_300,RR_idx_300,RR_300,500);   
