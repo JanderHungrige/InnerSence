@@ -93,7 +93,31 @@ elseif  strcmp(RRMethod,'M')
     savefolderEDR= ([ savefolder 'HRV_features\EDR_M\']);     
     savefolderHRVtime= ([ savefolder 'HRV_features\timedomain_M\']);
     savefolderHRVfreq= ([ savefolder 'HRV_features\freqdomain_M\']);        
-    savefolderHRVnonlin= ([ savefolder 'HRV_features\nonlinear_M\']);        
+    savefolderHRVnonlin= ([ savefolder 'HRV_features\nonlinear_Maddpath([basepath '\Documents\GitHub\Joined_Matlab'])
+addpath([basepath '\Documents\GitHub\Joined_Matlab\HRV feature creation\'])
+addpath([basepath '\Documents\GitHub\Joined_Matlab\ECG feature creation'])
+addpath([basepath '\Documents\GitHub\Joined_Matlab\R peak detection'])
+addpath([basepath '\Documents\GitHub\DNN\Matlab\Create data'])
+addpath([basepath '\Documents\GitHub\DNN\Matlab\Annotation'])
+% Load EDF files 
+addpath([basepath '\Documents\GitHub\Joined_Matlab\read edf files\Without annot'])
+addpath([basepath '\Documents\GitHub\Joined_Matlab\read edf files\With annot'])addpath([basepath '\Documents\GitHub\Joined_Matlab'])
+addpath([basepath '\Documents\GitHub\Joined_Matlab\HRV feature creation\'])
+addpath([basepath '\Documents\GitHub\Joined_Matlab\ECG feature creation'])
+addpath([basepath '\Documents\GitHub\Joined_Matlab\R peak detection'])
+addpath([basepath '\Documents\GitHub\DNN\Matlab\Create data'])
+addpath([basepath '\Documents\GitHub\DNN\Matlab\Annotation'])
+% Load EDF files 
+addpath([basepath '\Documents\GitHub\Joined_Matlab\read edf files\Without annot'])
+addpath([basepath '\Documents\GitHub\Joined_Matlab\read edf files\With annot'])addpath([basepath '\Documents\GitHub\Joined_Matlab'])
+addpath([basepath '\Documents\GitHub\Joined_Matlab\HRV feature creation\'])
+addpath([basepath '\Documents\GitHub\Joined_Matlab\ECG feature creation'])
+addpath([basepath '\Documents\GitHub\Joined_Matlab\R peak detection'])
+addpath([basepath '\Documents\GitHub\DNN\Matlab\Create data'])
+addpath([basepath '\Documents\GitHub\DNN\Matlab\Annotation'])
+% Load EDF files 
+addpath([basepath '\Documents\GitHub\Joined_Matlab\read edf files\Without annot'])
+addpath([basepath '\Documents\GitHub\Joined_Matlab\read edf files\With annot'])\']);        
 end
 
 
