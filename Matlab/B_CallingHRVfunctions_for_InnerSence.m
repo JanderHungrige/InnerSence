@@ -14,7 +14,6 @@ tic
 PatientID=[3,4,5,6,7,9,13,15]; % core. Show all patients in the folder
 pat=[3,4,5,6,7,9,13,15]; 
 
- 
 
 user='c3po'; % c3po Philips
 
@@ -221,7 +220,8 @@ savefolderHRVweightAge=([savefolder 'HRV_features\weigthAge\']);
         Saving(Age_diff,savefolderHRVweightAge, Neonate, win)        
         disp('* Age and Weight saved')
     end  
-        
+    clearvars Birthweight GA CA Age_diff
+ 
     %% ************ CALCULATE FEATURES **************
 
     %%%%%%%% ECG TIME DOMAIN     
@@ -285,8 +285,8 @@ savefolderHRVweightAge=([savefolder 'HRV_features\weigthAge\']);
           disp('- LepelZiv EDR finished')  
 
 
-        clearvars ECG_win_300 ECG_win_30 t_ECG_300 t_ECG_30 RR_idx_300 RR_300 RR_idx_30 RR_30 powerspectrum f
-        
+        clearvars ECG_win_300 ECG_win_30 t_ECG_300 t_ECG_30 RR_idx_300 RR_300 RR_idx_30 RR_30 powerspectrum f powerspectrumEDR fEDR ECG Resp EMG EOG Chin...
+            EDR_300 EDR_30 t_30 t_300        
 %     end %Sessionp
  end% Patient
  disp('----------------------------------')
